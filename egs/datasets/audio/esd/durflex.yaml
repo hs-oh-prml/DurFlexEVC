@@ -1,0 +1,31 @@
+base_config:
+  - egs/egs_bases/tts/durflex.yaml
+  - ./base_text2mel.yaml
+task_cls: tasks.tts.durflex.DurFlexTask
+binary_data_dir: "/workspace/hs_oh/dataset/binary/esd_vc"
+
+binarization_args:
+  with_spk_embed: true
+  with_align: false
+gen_dir_name: all_emo # recon: reconstruct, all_emo: conversion for all emotions
+
+decoder:
+  dim: 128
+  dim_mults: [1, 2, 4, 8]
+  pe_scale: 1000
+  beta_min: 0.05
+  beta_max: 20.0
+  spk_emb_dim: 256
+
+diffusion_step: 100
+segment_size: 32
+
+feature_dims: 768
+n_units: 200
+
+use_spk_id: true
+use_spk_embed: false
+use_spk_encoder: false
+
+alpha: 0.1
+lambda_grl: 0.001
