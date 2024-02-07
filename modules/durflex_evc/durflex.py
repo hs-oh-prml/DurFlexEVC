@@ -1,4 +1,3 @@
-import math
 import random
 from copy import deepcopy
 
@@ -6,25 +5,14 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 from modules.commons.layers import Embedding
-from modules.commons.transformer import (
-    FFTBlocks,
-    MultiheadAttention,
-    FastSpeechEncoder,
-    SinusoidalPositionalEmbedding,
-)
+from modules.commons.transformer import FFTBlocks, MultiheadAttention
 from modules.tts.commons.align_ops import expand_states, dedup_seq
 from modules.tts.commons.align_ops import clip_mel2token_to_multiple, expand_states
-from modules.tts.durflex_evc.diffusion import Diffusion, Mish
-from modules.tts.durflex_evc.duration_predictor import StochasticDurationPredictor
-from modules.tts.durflex_evc.style_encoder import StyleEncoder
-from modules.commons.nar_tts_modules import (
-    PitchPredictor,
-    DurationPredictor,
-    EnergyPredictor,
-    LengthRegulator,
-)
+from modules.durflex_evc.diffusion import Diffusion, Mish
+from modules.durflex_evc.duration_predictor import StochasticDurationPredictor
+from modules.durflex_evc.style_encoder import StyleEncoder
+from modules.commons.nar_tts_modules import LengthRegulator
 
-from utils.audio.pitch.utils import denorm_f0, f0_to_coarse
 from utils.audio.align import mel2token_to_dur
 from utils.nn.seq_utils import (
     group_hidden_by_segs,
@@ -135,11 +123,6 @@ class DurFlex(nn.Module):
         y=None,
         y_lengths=None,
         diffusion_step=100,
-        text_gradient_scale=0.0,
-        spk_gradient_scale=0.0,
-        f0=None,
-        uv=None,
-        energy=None,
         **kwargs,
     ):
         ret = {}
@@ -147,7 +130,7 @@ class DurFlex(nn.Module):
             y, y_lengths, emotion_id, spk_embed, spk_id, tgt_emotion_id=tgt_emotion_id
         )
         if self.hparams["use_spk_encoder"]:
-            emo_logits = self.emo_clf(tgt_spk_embed)
+            emo_logits = self.emo_clf(spk_embed)
             ret["emo_logits"] = emo_logits
         src_style_embed = src_spk_embed + src_emo_embed
         tgt_style_embed = src_spk_embed + tgt_emo_embed
@@ -205,7 +188,6 @@ class DurFlex(nn.Module):
         )
 
         x = self.proj_m(x)
-        ret["aux_mel"] = x
         x = x * tgt_nonpadding
 
         x = x.transpose(1, 2)  #
@@ -364,7 +346,7 @@ class DurFlex(nn.Module):
             need_weights=True,
             before_softmax=True,
         )
-        ret["unit_logits"] = attn_weights
+        ret["unit_logits"] = torch.log(attn_weights)
         unit_pred = torch.argmax(attn_weights, dim=-1)
         ret["unit_pred_frame"] = unit_pred
         _, count = dedup_seq(unit_pred)

@@ -4,11 +4,10 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-from modules.tts.durflex_evc.durflex import DurFlex
-from tasks.tts.dataset_utils import DurFlexDataset
+from modules.durflex_evc.durflex import DurFlex
+from tasks.durflex_evc.dataset_utils import DurFlexDataset
 from tasks.tts.speech_base import SpeechBaseTask
 from utils.audio.align import mel2token_to_dur
-from utils.audio.pitch.utils import denorm_f0
 from utils.commons.hparams import hparams
 from utils.commons.tensor_utils import tensors_to_scalars
 from utils.plot.plot import spec_to_figure
@@ -27,7 +26,7 @@ class DurFlexTask(SpeechBaseTask):
         spk_embed = sample.get("spk_embed")
         spk_id = sample.get("spk_ids")
         emotion_id = sample.get("emotion_ids")
-        txt_tokens = sample["units"]  # [B, T_t]
+
         src_feat = sample["hubert_features"]
         y = sample["mels"]  # [B, T_s, 80]
         y_lengths = sample["mel_lengths"]  # [B, T_s, 80]
@@ -48,7 +47,6 @@ class DurFlexTask(SpeechBaseTask):
             )
             losses = {}
 
-            tgt_dur = output["mel2unit"]
             self.add_ce_loss(
                 output["unit_pred_frame"],
                 output["unit_logits"],
@@ -78,13 +76,17 @@ class DurFlexTask(SpeechBaseTask):
 
     def add_ce_loss(self, pred, logits, target, nonpadding, losses=None):
         B, L, N = logits.shape
+        if hparams["use_log"]:
+            logits = torch.log(logits + 1e-9)
         unit_logits = logits.view(-1, N)  # (B * L_max, N)로 변경
         targets = F.interpolate(
             target,
             size=L,
             mode="nearest",
         ).squeeze(1)
-        unit_loss = self.cel(unit_logits, targets.view(-1).long())  # (B * L_max,)로 변경
+        unit_loss = self.cel(
+            unit_logits, targets.view(-1).long()
+        )  # (B * L_max,)로 변경
         unit_loss = unit_loss * nonpadding.view(-1)
         unit_loss = unit_loss.sum() / nonpadding.sum()
         unit_accuracy = pred == targets
@@ -115,18 +117,13 @@ class DurFlexTask(SpeechBaseTask):
             emo_mels = []
             spk_embed = sample.get("spk_embed")
             spk_id = sample.get("spk_ids")
-            txt_tokens = sample["units"]
+
             src_emotion_id = sample.get("emotion_ids")
             src_feat = sample["hubert_features"]
 
             y = sample["mels"]  # [B, T_s, 80]
             y_lengths = sample["mel_lengths"]  # [B, T_s, 80]
-            if hparams["use_pitch"]:
-                f0s = []
-                f0_gt = denorm_f0(sample["f0"][0].cpu(), sample["uv"][0].cpu())
-                f0s.append(f0_gt)
-            else:
-                f0s = None
+
             for idx, _ in enumerate(emo_dict):
                 emotion_id = torch.LongTensor([idx]).cuda()
                 output = self.model(
@@ -150,18 +147,9 @@ class DurFlexTask(SpeechBaseTask):
                     self.logger.add_audio(
                         f"wav_pdur_{batch_idx}", wav_pred, self.global_step, sr
                     )
-                    mel_title = "aux_mel"
-                    self.plot_mel2(
-                        batch_idx,
-                        [
-                            sample["mels"][0],
-                            output["aux_mel"][0],
-                        ],
-                        title=mel_title,
-                        name=f"mel_pdur_{batch_idx}",
-                    )
+
             gt_mel = sample["mels"]
-            self.save_valid_result(sample, batch_idx, [gt_mel, emo_mels], f0s=f0s)
+            self.save_valid_result(sample, batch_idx, [gt_mel, emo_mels])
 
         outputs = tensors_to_scalars(outputs)
         return outputs
@@ -252,13 +240,13 @@ class DurFlexTask(SpeechBaseTask):
         assert (
             sample["txt_tokens"].shape[0] == 1
         ), "only support batch_size=1 in inference"
+
         if hparams["gen_dir_name"] == "recon":
             outputs = self.run_model(sample, infer=True)
             text = sample["text"][0]
             item_name = sample["item_name"][0]
             tokens = sample["txt_tokens"][0].cpu().numpy()
             mel_gt = sample["mels"][0].cpu().numpy()
-            mel2unit = sample["mel2unit"][0].cpu().numpy()
             mel2unit_pred = None
             str_word = sample["units"][0].cpu().numpy().tolist()
             mel_pred = outputs["mel_out"][0].cpu().numpy()
@@ -278,7 +266,6 @@ class DurFlexTask(SpeechBaseTask):
             emo_dict = ["Neutral", "Angry", "Happy", "Sad", "Surprise"]
             y = sample["mels"]  # [B, T_s, 80]
             y_lengths = sample["mel_lengths"]  # [B, T_s, 80]
-            txt_tokens = sample["units"]  # [B, T_t]
             spk_embed = sample.get("spk_embed")
             spk_id = sample.get("spk_ids")
             src_emotion_id = sample.get("emotion_ids")
@@ -301,7 +288,6 @@ class DurFlexTask(SpeechBaseTask):
                 item_name = sample["item_name"][0]
                 tokens = sample["txt_tokens"][0].cpu().numpy()
                 mel_gt = sample["mels"][0].cpu().numpy()
-                mel2unit = sample["mel2unit"][0].cpu().numpy()
                 mel2unit_pred = None
                 str_word = sample["units"][0].cpu().numpy().tolist()
                 mel_pred = outputs["mel_out"][0].cpu().numpy()

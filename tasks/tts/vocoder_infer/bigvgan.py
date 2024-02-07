@@ -31,7 +31,6 @@ class BigVGAN(BaseVocoder):
             os.path.join(hparams["vocoder_ckpt"], "g_05050000"),
             map_location=self.device,
         )
-        print("##################### Load BigVGAN")
         self.model.load_state_dict(checkpoint_dict["generator"])
         self.model.to(self.device)
         self.model.eval()
@@ -53,7 +52,5 @@ class BigVGAN(BaseVocoder):
         meter = pyln.Meter(hparams["audio_sample_rate"])  # create BS.1770 meter
         loudness = meter.integrated_loudness(audio)
         audio = pyln.normalize.loudness(audio, loudness, -20.0)
-        # print(audio)
-        # wav_out = y.squeeze().cpu().numpy()
-        # wav_out = wav_out * MAX_WAV_VALUE
+
         return audio

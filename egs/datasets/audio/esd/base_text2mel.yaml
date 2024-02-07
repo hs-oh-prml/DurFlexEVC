@@ -1,7 +1,7 @@
 base_config: egs/egs_bases/tts/base.yaml
-raw_data_dir: "/workspace/hs_oh/dataset/Emotional_Speech_Dataset_ESD/eng"
-processed_data_dir: "/workspace/hs_oh/dataset/processed/esd"
-binary_data_dir: "/workspace/hs_oh/dataset/binary/esd"
+raw_data_dir: ""
+processed_data_dir: ""
+binary_data_dir: ""
 preprocess_cls: egs.datasets.audio.esd.preprocess.ESDPreprocess
 binarizer_cls: data_gen.tts.esd_binarizer.Binarizer
 
@@ -9,9 +9,10 @@ binarization_args:
   train_range: [2500, -1]
   test_range: [0, 1500]
   valid_range: [1500, 2500]
+  with_spk_embed: true
+  with_align: false
 test_ids: []
 f0_min: 80
 f0_max: 800
-# vocoder_ckpt: /workspace/hs_oh/checkpoints/0501_hifigan_esd
 vocoder: BigVGAN
 vocoder_ckpt: checkpoints/bigvgan_16k

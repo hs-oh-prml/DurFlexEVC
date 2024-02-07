@@ -8,9 +8,6 @@ import numpy as np
 from resemblyzer import VoiceEncoder
 from tqdm import tqdm
 
-import utils.commons.single_thread_env  # NOQA
-
-# from utils.audio import torchaudio_wav2spec_with_flat
 from utils.audio import librosa_wav2spec_bigvgan
 from utils.audio.align import get_mel2ph, mel2token_to_dur
 from utils.audio.cwt import get_lf0_cwt, get_cont_lf0

@@ -8,15 +8,12 @@ import torch.distributed as dist
 import torch.nn.functional as F
 import torch.optim
 import torch.utils.data
-import yaml
 from tqdm import tqdm
 import utils
 from tasks.tts.dataset_utils import BaseSpeechDataset
 from tasks.tts.tts_utils import (
     parse_mel_losses,
     parse_dataset_configs,
-    load_data_preprocessor,
-    load_data_binarizer,
 )
 from tasks.tts.vocoder_infer.base_vocoder import BaseVocoder, get_vocoder_cls
 from utils.audio.align import mel2token_to_dur

@@ -1,10 +1,8 @@
 import torch
 from modules.vocoder.hifigan.hifigan import SynthesizerTrn
 from tasks.tts.vocoder_infer.base_vocoder import register_vocoder, BaseVocoder
-from utils.commons.ckpt_utils import load_ckpt
-from utils.commons.hparams import set_hparams, hparams
+from utils.commons.hparams import hparams
 from utils.commons.meters import Timer
-from collections import OrderedDict
 import json
 
 total_time = 0
@@ -59,8 +57,6 @@ class HifiGAN(BaseVocoder):
         checkpoint_dict = torch.load(
             "checkpoints/hifigan_16k/G_2930000.pth", map_location=self.device
         )
-        print("##################### Load HiFi-GAN")
-        # ckpt_dict = OrderedDict((k.replace("dec.", ""), v) for k, v in checkpoint_dict["model"].items())
         self.model.load_state_dict(checkpoint_dict["model"])
         self.model.to(self.device)
         self.model.eval()

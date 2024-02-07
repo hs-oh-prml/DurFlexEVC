@@ -1,12 +1,7 @@
 base_config:
   - egs/egs_bases/tts/durflex.yaml
   - ./base_text2mel.yaml
-task_cls: tasks.tts.durflex.DurFlexTask
-binary_data_dir: "/workspace/hs_oh/dataset/binary/esd_vc"
-
-binarization_args:
-  with_spk_embed: true
-  with_align: false
+task_cls: tasks.durflex.durflex.DurFlexTask
 gen_dir_name: all_emo # recon: reconstruct, all_emo: conversion for all emotions
 
 decoder:

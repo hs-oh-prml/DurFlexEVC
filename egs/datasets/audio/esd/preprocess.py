@@ -5,7 +5,7 @@ import os
 class ESDPreprocess(BasePreprocessor):
     def meta_data(self):
         for l in open(
-            "/workspace/hs_oh/dataset/Emotional_Speech_Dataset_ESD/eng/esd_all_v2.txt"
+            "/workspace/dataset/Emotional_Speech_Dataset_ESD/eng/esd.txt"
         ).readlines():
             wav_fn, txt, emo = l.strip().split("|")
             item_name = os.path.basename(wav_fn).replace(".wav", "")

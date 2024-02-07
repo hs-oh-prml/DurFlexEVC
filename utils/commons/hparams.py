@@ -34,7 +34,7 @@ def set_hparams(
         parser.add_argument(
             "--save_dir",
             type=str,
-            default="/workspace/hs_oh/checkpoints",
+            default="/workspace/checkpoints",
             help="exp_name",
         )
         parser.add_argument(
