@@ -19,16 +19,16 @@ Maybe you can mention me or this repo in the acknowledgements too
 <!-- Badges -->
 <p>
   <a href="https://github.com/hs-oh-prml/DurFlexEVC/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/Louis3797/awesome-readme-template" alt="contributors" />
+    <img src="https://img.shields.io/github/contributors/hs-oh-prml/DurFlexEVC" alt="contributors" />
   </a>
   <a href="">
-    <img src="https://img.shields.io/github/last-commit/Louis3797/awesome-readme-template" alt="last update" />
+    <img src="https://img.shields.io/github/last-commit/hs-oh-prml/DurFlexEVC" alt="last update" />
   </a>
   <a href="https://github.com/hs-oh-prml/DurFlexEVC/network/members">
-    <img src="https://img.shields.io/github/forks/Louis3797/awesome-readme-template" alt="forks" />
+    <img src="https://img.shields.io/github/forks/hs-oh-prml/DurFlexEVC" alt="forks" />
   </a>
   <a href="https://github.com/hs-oh-prml/DurFlexEVC/stargazers">
-    <img src="https://img.shields.io/github/stars/Louis3797/awesome-readme-template" alt="stars" />
+    <img src="https://img.shields.io/github/stars/hs-oh-prml/DurFlexEVC" alt="stars" />
   </a>
   <!-- <a href="https://github.com/hs-oh-prml/DurFlexEVC/issues/">
     <img src="https://img.shields.io/github/issues/Louis3797/awesome-readme-template" alt="open issues" /> -->
