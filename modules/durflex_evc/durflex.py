@@ -346,7 +346,7 @@ class DurFlex(nn.Module):
             need_weights=True,
             before_softmax=True,
         )
-        ret["unit_logits"] = torch.log(attn_weights)
+        ret["unit_logits"] = torch.log(attn_weights + 1e-9)
         unit_pred = torch.argmax(attn_weights, dim=-1)
         ret["unit_pred_frame"] = unit_pred
         _, count = dedup_seq(unit_pred)
