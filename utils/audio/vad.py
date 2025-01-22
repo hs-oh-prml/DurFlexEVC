@@ -37,7 +37,7 @@ def trim_long_silences(
             wav_raw = wav_raw / np.abs(wav_raw).max()
 
     wav = librosa.resample(
-        wav_raw, orig_sr=sr, target_sr=sampling_rate, res_type="kaiser_best"
+        y=wav_raw, orig_sr=sr, target_sr=sampling_rate, res_type="kaiser_best"
     )
 
     vad_window_length = 30  # In milliseconds

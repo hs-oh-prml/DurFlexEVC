@@ -1,325 +1,103 @@
-<!--
-Hey, thanks for using the awesome-readme-template template.
-If you have any enhancements, then fork this project and create a pull request
-or just open an issue with the label "enhancement".
 
-Don't forget to give this project a star for additional support ;)
-Maybe you can mention me or this repo in the acknowledgements too
--->
+# DurFlex-EVC: Duration-Flexible Emotional Voice Conversion Leveraging Discrete Representations without Text Alignment 
+
 <div align="center">
 
-  <!-- <img src="assets/logo.png" alt="logo" width="200" height="auto" /> -->
-  <h1>DurFlex-EVC: Duration-Flexible Emotional Voice Conversion with Parallel Generation (Under review)</h1>
-  
-  <p>
+  <img src="assets/logo.png" alt="logo" width="400" height="auto" />  
+</div>
 
-  </p>
-  
-  
-<!-- Badges -->
-<p>
-  <a href="https://github.com/hs-oh-prml/DurFlexEVC/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/hs-oh-prml/DurFlexEVC" alt="contributors" />
-  </a>
-  <a href="">
-    <img src="https://img.shields.io/github/last-commit/hs-oh-prml/DurFlexEVC" alt="last update" />
-  </a>
+
+<p align="center">
   <a href="https://github.com/hs-oh-prml/DurFlexEVC/network/members">
     <img src="https://img.shields.io/github/forks/hs-oh-prml/DurFlexEVC" alt="forks" />
   </a>
   <a href="https://github.com/hs-oh-prml/DurFlexEVC/stargazers">
     <img src="https://img.shields.io/github/stars/hs-oh-prml/DurFlexEVC" alt="stars" />
   </a>
-  <!-- <a href="https://github.com/hs-oh-prml/DurFlexEVC/issues/">
-    <img src="https://img.shields.io/github/issues/Louis3797/awesome-readme-template" alt="open issues" /> -->
+  <br>
+  <a href="https://ieeexplore.ieee.org/abstract/document/10844546">
+    [Paper]
   </a>
-  <!-- <a href="https://github.com/hs-oh-prml/DurFlexEVC/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/Louis3797/awesome-readme-template.svg" alt="license" />
-  </a> -->
+  <a href="https://prml-lab-speech-team.github.io/durflex/">
+    [Demo]
+  </a>
 </p>
-   
-<!-- <h4>
-    <a href="https://github.com/hs-oh-prml/DurFlexEVC/">View Demo</a>
-  <span> · </span>
-    <a href="https://github.com/hs-oh-prml/DurFlexEVC">Documentation</a>
-  <span> · </span>
-    <a href="https://github.com/hs-oh-prml/DurFlexEVC/issues/">Report Bug</a>
-  <span> · </span>
-    <a href="https://github.com/hs-oh-prml/DurFlexEVC/issues/">Request Feature</a>
-  </h4> -->
-</div>
 
-<br />
+This repository contains the implementation of DurFlex-EVC, a novel method for emotional voice conversion that flexibly handles variable durations in speech without requiring text alignment. This implementation is based on our paper:
 
-<!-- Table of Contents -->
+> H.-S. Oh, S.-H. Lee, D.-H. Cho and S.-W. Lee, "DurFlex-EVC: Duration-Flexible Emotional Voice Conversion Leveraging Discrete Representations without Text Alignment," *IEEE Transactions on Affective Computing*, 2025.
 
-<!-- # Table of Contents
 
-- [About the Project](#about-the-project)
-  - [Architecture](#Architecture)
-  - [Tech Stack](#tech-stack)
-  - [Features](#features)
-  - [Color Reference](#color-reference)
-  - [Environment Variables](#environment-variables)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Running Tests](#running-tests)
-  - [Run Locally](#run-locally)
-  - [Deployment](#deployment)
-- [Usage](#usage)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-  - [Code of Conduct](#code-of-conduct)
-- [FAQ](#faq)
-- [License](#license)
-- [Contact](#contact)
-- [Acknowledgements](#acknowledgements) -->
-
-<!-- About the Project -->
-
-## About the Project
-
-Emotional voice conversion (EVC) seeks to modify the emotional tone of a speaker’s voice while preserving the original linguistic content and the speaker’s unique vocal characteristics.
-Recent advancements in EVC have involved the simultaneous modeling of pitch and duration, utilizing the potential of sequence-to-sequence (seq2seq) models.
-To enhance reliability and efficiency in conversion, this study shifts focus towards parallel speech generation.
-We introduce Duration-Flexible EVC (DurFlex-EVC), which integrates a style autoencoder and unit aligner.
-Traditional models, while incorporating self-supervised learning (SSL) representations that contain both linguistic and paralinguistic information, have neglected this dual nature, leading to reduced controllability.
-Addressing this issue, we implement cross-attention to synchronize these representations with various emotions.
-Additionally, a style autoencoder is developed for the disentanglement and manipulation of style elements.
-The efficacy of our approach is validated through both subjective and objective evaluations, establishing its superiority over existing models in the field.
-
-<!-- Screenshots -->
-
-### Architecture
-
-<div align="center"> 
-  <img src="https://github.com/hs-oh-prml/DurFlexEVC/assets/43984708/3b13d0cf-eefb-4e3e-8b5a-09d336e3581d" alt="screenshot" />
-</div>
-
-<!-- TechStack -->
-
-### Tech Stack
-
-<details>
-  <summary>Framework</summary>
-  <ul>
-    <li><a href="https://www.python.org/">Python</a></li>
-    <li><a href="https://pytorch.org/">PyTorch</a></li>
-    <li><a href="https://huggingface.co/">HuggingFace</a></li>
-    <!-- <li><a href="https://reactjs.org/">React.js</a></li>
-    <li><a href="https://tailwindcss.com/">TailwindCSS</a></li> -->
-  </ul>
-</details>
-
-<!-- <details>
-  <summary>Server</summary>
-  <ul>
-    <li><a href="https://www.typescriptlang.org/">Typescript</a></li>
-    <li><a href="https://expressjs.com/">Express.js</a></li>
-    <li><a href="https://go.dev/">Golang</a></li>
-    <li><a href="https://nestjs.com/">Nest.js</a></li>
-    <li><a href="https://socket.io/">SocketIO</a></li>
-    <li><a href="https://www.prisma.io/">Prisma</a></li>
-    <li><a href="https://www.apollographql.com/">Apollo</a></li>
-    <li><a href="https://graphql.org/">GraphQL</a></li>
-  </ul>
-</details> -->
-
-<!-- <details>
-<summary>Database</summary>
-  <ul>
-    <li><a href="https://www.mysql.com/">MySQL</a></li>
-    <li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
-    <li><a href="https://redis.io/">Redis</a></li>
-    <li><a href="https://neo4j.com/">Neo4j</a></li>
-    <li><a href="https://www.mongodb.com/">MongoDB</a></li>
-  </ul>
-</details> -->
-
-<!-- <details>
-<summary>DevOps</summary>
-  <ul>
-    <li><a href="https://www.docker.com/">Docker</a></li>
-    <li><a href="https://www.jenkins.io/">Jenkins</a></li>
-    <li><a href="https://circleci.com/">CircleCLI</a></li>
-  </ul>
-</details> -->
-
-<!-- Features -->
-
-<!-- ### Features
-
-- Feature 1
-- Feature 2
-- Feature 3 -->
-
-<!-- Color Reference -->
-
-<!-- ### Color Reference
-
-| Color           | Hex                                                              |
-| --------------- | ---------------------------------------------------------------- |
-| Primary Color   | ![#222831](https://via.placeholder.com/10/222831?text=+) #222831 |
-| Secondary Color | ![#393E46](https://via.placeholder.com/10/393E46?text=+) #393E46 |
-| Accent Color    | ![#00ADB5](https://via.placeholder.com/10/00ADB5?text=+) #00ADB5 |
-| Text Color      | ![#EEEEEE](https://via.placeholder.com/10/EEEEEE?text=+) #EEEEEE | -->
-
-<!-- Env Variables -->
-
-<!-- ### Environment Variables
-
-To run this project, you will need to add the following environment variables to your .env file
-
-`API_KEY`
-
-`ANOTHER_API_KEY` -->
-
-<!-- Getting Started -->
+## Abstract
+Emotional voice conversion (EVC) involves modifying various acoustic characteristics, such as pitch and spectral envelope, to match a desired emotional state while preserving the speaker's identity. Existing EVC methods often rely on text transcriptions or time-alignment information and struggle to handle varying speech durations effectively. In this paper, we propose DurFlex-EVC, a duration-flexible EVC framework that operates without the need for text or alignment information. We introduce a unit aligner that models contextual information by aligning speech with discrete units representing content, eliminating the need for text or speech-text alignment. Additionally, we design a style autoencoder that effectively disentangles content and emotional style, allowing precise manipulation of the emotional characteristics of the speech. We further enhance emotional expressiveness through a hierarchical stylize encoder that applies the target emotional style at multiple hierarchical levels, refining the stylization process to improve the naturalness and expressiveness of the converted speech. Experimental results from subjective and objective evaluations demonstrate that our approach outperforms baseline models, effectively handling duration variability and enhancing emotional expressiveness in the converted speech.
 
 ## Getting Started
 
-<!-- Prerequisites -->
+### Requirements 
+```
+pip install -r requirements.txt
+```
+Dataset: [[Download](https://hltsingapore.github.io/ESD/)]
 
-### Prerequisites
+k-means model: [[Download](https://works.do/xIux3D2)]
 
-```bash
- pip install -r requirements.txt
+### Preprocessing
+```
+bash preprocess.sh
+
+export PYTHONPATH=.
+DEVICE=0;
+CONFIG="configs/exp/durflex_evc.yaml";
+CUDA_VISIBLE_DEVICES=$DEVICE python data_gen/runs/preprocess.py --config $CONFIG
+CUDA_VISIBLE_DEVICES=$DEVICE python data_gen/runs/binarize.py --config $CONFIG
+CUDA_VISIBLE_DEVICES=$DEVICE python preprocess_unit.py --config $CONFIG
+
 ```
 
-### Training
+### Training model
+```
+bash run.sh
 
-TBA
+export PYTHONPATH=.
+DEVICE=0;
+CONFIG="configs/exp/durflex_evc.yaml";
+MODEL_NAME="DurFlex";
+CUDA_VISIBLE_DEVICES=$DEVICE python tasks/run.py \
+    --config $CONFIG \
+    --exp_name $MODEL_NAME \
+    --reset
 
-<!-- Installation -->
-
-<!-- ### Installation
-
-Install my-project with npm
-
-```bash
-  yarn install my-project
-  cd my-project
-``` -->
-
-<!-- Running Tests -->
-
-<!-- ### Running Tests
-
-To run tests, run the following command
-
-```bash
-  yarn test test
-``` -->
-
-<!-- Run Locally -->
-
-<!-- ### Run Locally
-
-Clone the project
-
-```bash
-  git clone https://github.com/Louis3797/awesome-readme-template.git
 ```
 
-Go to the project directory
+### Inference
 
-```bash
-  cd my-project
+```
+bash infer.sh
+
+export PYTHONPATH=.
+DEVICE=0;
+CONFIG="./configs/exp/durflex_evc.yaml";
+SRC_WAV="./sample/0011_000021.wav"
+SAVE_DIR="./results"
+CUDA_VISIBLE_DEVICES=$DEVICE python infer.py --config $CONFIG \
+    --src_wav $SRC_WAV \
+    --save_dir $SAVE_DIR
 ```
 
-Install dependencies
+### License
+This project is licensed under the MIT License. See the `LICENSE` file for details.
 
-```bash
-  yarn install
+### Citations
+If you use this implementation in your research, please cite our paper:
 ```
-
-Start the server
-
-```bash
-  yarn start
-``` -->
-
-<!-- Deployment -->
-
-<!-- ### Deployment
-
-To deploy this project run
-
-```bash
-  yarn deploy
-``` -->
-
-<!-- Usage -->
-
-<!-- ## Usage
-
-Use this space to tell a little more about your project and how it can be used. Show additional screenshots, code samples, demos or link to other resources.
-
-```javascript
-import Component from "my-project";
-
-function App() {
-  return <Component />;
-}
-``` -->
-
-<!-- Roadmap -->
-
-<!-- ## Roadmap
-
-- [x] Todo 1
-- [ ] Todo 2 -->
-
-<!-- Contributing -->
-
-<!-- ## Contributing
-
-<a href="https://github.com/Louis3797/awesome-readme-template/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Louis3797/awesome-readme-template" />
-</a> -->
-
-<!-- Contributions are always welcome! -->
-
-<!-- See `contributing.md` for ways to get started. -->
-
-<!-- Code of Conduct -->
-
-<!-- ### Code of Conduct
-
-Please read the [Code of Conduct](https://github.com/Louis3797/awesome-readme-template/blob/master/CODE_OF_CONDUCT.md) -->
-
-<!-- FAQ -->
-
-<!-- ## FAQ
-
-- Question 1
-
-  - Answer 1
-
-- Question 2
-
-  - Answer 2 -->
-
-<!-- License -->
-
-<!-- ## License
-
-Distributed under the no License. See LICENSE.txt for more information. -->
-
-<!-- Contact -->
-
-<!-- ## Contact
-
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
-
-Project Link: [https://github.com/Louis3797/awesome-readme-template](https://github.com/Louis3797/awesome-readme-template) -->
-
-<!-- Acknowledgments -->
-
-## Acknowledgements
-
-- [NATSpeech](https://github.com/NATSpeech/NATSpeech)
-- [UnitSpeech](https://github.com/gmltmd789/UnitSpeech)
-- [BigVGAN](https://github.com/NVIDIA/BigVGAN)
-- [HuBERT](https://github.com/facebookresearch/fairseq/blob/main/examples/hubert/README.md)
+@ARTICLE{10844546,
+  author={Oh, Hyung-Seok and Lee, Sang-Hoon and Cho, Deok-Hyeon and Lee, Seong-Whan},
+  journal={IEEE Transactions on Affective Computing}, 
+  title={DurFlex-EVC: Duration-Flexible Emotional Voice Conversion Leveraging Discrete Representations Without Text Alignment}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={1-15},
+  keywords={Feature extraction;Autoencoders;Context modeling;Transformers;Acoustics;Speech recognition;Computational modeling;Vocoders;Translation;Generators;Duration control;emotional voice conversion;self-supervised representation;style disentanglement},
+  doi={10.1109/TAFFC.2025.3530920}}
+```

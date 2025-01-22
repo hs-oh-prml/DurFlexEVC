@@ -1,4 +1,0 @@
-base_config: egs/egs_bases/tts/vocoder/base.yaml
-raw_data_dir: ""
-processed_data_dir: ""
-binary_data_dir: ""

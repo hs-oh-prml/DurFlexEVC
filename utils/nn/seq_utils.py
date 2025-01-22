@@ -3,13 +3,6 @@ import torch
 import torch.nn.functional as F
 
 
-def fix_len_compatibility(length, num_downsamplings_in_unet=3):
-    while True:
-        if length % (2**num_downsamplings_in_unet) == 0:
-            return int(length)
-        length += 1
-
-
 def make_positions(tensor, padding_idx):
     """Replace non-padding symbols with their position numbers.
 
@@ -27,15 +20,11 @@ def softmax(x, dim):
     return F.softmax(x, dim=dim, dtype=torch.float32)
 
 
-def sequence_mask(lengths, maxlen=None, dtype=torch.bool):
-    if maxlen is None:
-        maxlen = lengths.max()
-    mask = ~(
-        torch.ones((len(lengths), maxlen)).to(lengths.device).cumsum(dim=1).t()
-        > lengths
-    ).t()
-    mask.type(dtype)
-    return mask
+def sequence_mask(length, max_length=None):
+    if max_length is None:
+        max_length = length.max()
+    x = torch.arange(max_length, dtype=length.dtype, device=length.device)
+    return x.unsqueeze(0) < length.unsqueeze(1)
 
 
 def weights_nonzero_speech(target):

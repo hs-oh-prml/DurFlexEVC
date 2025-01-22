@@ -1,24 +1,24 @@
-import random
-import subprocess
-import traceback
-from datetime import datetime
-
-from torch.cuda.amp import GradScaler, autocast
-import numpy as np
-import torch.optim
-import torch.utils.data
 import copy
 import logging
 import os
 import re
 import sys
+import tqdm
+import random
+import subprocess
+import traceback
+from datetime import datetime
+import numpy as np
+
 import torch
 import torch.distributed as dist
 import torch.multiprocessing as mp
-import tqdm
+import torch.optim
+import torch.utils.data
+from torch.cuda.amp import GradScaler, autocast
+from torch.nn.parallel import DistributedDataParallel as DDP
 
 from utils.commons.ckpt_utils import get_last_checkpoint, get_all_ckpts
-from utils.commons.ddp_utils import DDP
 from utils.commons.hparams import hparams
 from utils.commons.tensor_utils import move_to_cuda
 from utils.os_utils import remove_file
@@ -113,7 +113,7 @@ class Trainer:
         self.log_save_interval = log_save_interval
         self.val_check_interval = val_check_interval
         self.tb_log_interval = tb_log_interval
-        self.amp = amp
+        self.amp = bool(amp)
         self.amp_scalar = GradScaler()
 
     def test(self, task_cls):
@@ -186,9 +186,9 @@ class Trainer:
         # link up experiment object
         if self.proc_rank == 0:
             task_ref.build_tensorboard(save_dir=self.work_dir, name="tb_logs")
-        else:
-            os.makedirs("tmp", exist_ok=True)
-            task_ref.build_tensorboard(save_dir="tmp", name="tb_tmp")
+        # else:
+        #     os.makedirs("tmp", exist_ok=True)
+        #     task_ref.build_tensorboard(save_dir="tmp", name="tb_tmp")
         self.logger = task_ref.logger
         try:
             if self.testing:
@@ -252,13 +252,10 @@ class Trainer:
             if self.on_gpu:
                 batch = move_to_cuda(batch, self.root_gpu)
             args = [batch, batch_idx]
-            if self.use_ddp:
-                output = task(*args)
+            if test:
+                output = task_ref.test_step(*args)
             else:
-                if test:
-                    output = task_ref.test_step(*args)
-                else:
-                    output = task_ref.validation_step(*args)
+                output = task_ref.validation_step(*args)
             # track outputs for collation
             outputs.append(output)
         # give model a chance to do something with the outputs (and method defined)
@@ -358,10 +355,7 @@ class Trainer:
                 if self.on_gpu:
                     batch = move_to_cuda(copy.copy(batch), self.root_gpu)
                 args = [batch, batch_idx, opt_idx]
-                if self.use_ddp:
-                    output = self.task(*args)
-                else:
-                    output = task_ref.training_step(*args)
+                output = task_ref.training_step(*args)
                 loss = output["loss"]
                 if loss is None:
                     continue
@@ -375,16 +369,7 @@ class Trainer:
                 if self.amp:
                     self.amp_scalar.scale(loss).backward()
                 else:
-                    loss.backward()
-            # Gradient Analysis
-            # print(task_ref.model.feat_proj.weight.grad)
-            # for name, param in task_ref.model.named_parameters():
-            #     if param.grad is not None:
-            #         print(name, param.grad.sum())
-            #     else:
-            #         print(name, param.grad)
-
-            # exit()
+                    loss.backward(retain_graph=True)
 
             # track progress bar metrics
             all_log_metrics.append(log_metrics)

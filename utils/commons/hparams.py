@@ -8,6 +8,22 @@ global_print_hparams = True
 hparams = {}
 
 
+class HPARAM:
+    def __init__(self, dictionary):
+        self.dictionary = dictionary
+
+    def __getitem__(self, key):
+        return self.dictionary[key]
+
+    def __getattr__(self, key):
+        try:
+            return self.dictionary[key]
+        except KeyError:
+            raise AttributeError(
+                f"'{type(self).__name__}' object has no attribute '{key}'"
+            )
+
+
 class Args:
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
@@ -31,12 +47,6 @@ def set_hparams(
             "--config", type=str, default="", help="location of the data corpus"
         )
         parser.add_argument("--exp_name", type=str, default="", help="exp_name")
-        parser.add_argument(
-            "--save_dir",
-            type=str,
-            default="/workspace/checkpoints",
-            help="exp_name",
-        )
         parser.add_argument(
             "-hp", "--hparams", type=str, default="", help="location of the data corpus"
         )
@@ -62,7 +72,6 @@ def set_hparams(
     assert args.config != "" or args.exp_name != ""
     if args.config != "":
         assert os.path.exists(args.config)
-
     config_chains = []
     loaded_config = set()
 
@@ -91,22 +100,24 @@ def set_hparams(
 
     saved_hparams = {}
     args_work_dir = ""
-    if args.exp_name != "":
-        args_work_dir = f"{args.save_dir}/{args.exp_name}"
-        ckpt_config_path = f"{args_work_dir}/config.yaml"
-        if os.path.exists(ckpt_config_path):
-            with open(ckpt_config_path) as f:
-                saved_hparams_ = yaml.safe_load(f)
-                if saved_hparams_ is not None:
-                    saved_hparams.update(saved_hparams_)
+
     hparams_ = {}
     if args.config != "":
         hparams_.update(load_config(args.config))
     if not args.reset:
         hparams_.update(saved_hparams)
 
-    if hparams_["work_dir"] == "" and args_work_dir != "":
-        hparams_["work_dir"] = args_work_dir
+    save_dir = hparams_["work_dir"]
+
+    if args.exp_name != "":
+        args_work_dir = f"{save_dir}/{args.exp_name}"
+        ckpt_config_path = f"{args_work_dir}/config.yaml"
+        if os.path.exists(ckpt_config_path):
+            with open(ckpt_config_path) as f:
+                saved_hparams_ = yaml.safe_load(f)
+                if saved_hparams_ is not None:
+                    saved_hparams.update(saved_hparams_)
+    hparams_["work_dir"] = args_work_dir
 
     # Support config overriding in command line. Support list type config overriding.
     # Examples: --hparams="a=1,b.c=2,d=[1 1 1]"
@@ -152,4 +163,5 @@ def set_hparams(
             print(f"\033[;33;m{k}\033[0m: {v}, ", end="\n" if i % 5 == 4 else "")
         print("")
         global_print_hparams = False
+    hparams_ = HPARAM(hparams_)
     return hparams_
