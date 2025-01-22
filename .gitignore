@@ -1,0 +1,3 @@
+
+*.pyc
+checkpoints/bigvgan_16k/g_05050000
