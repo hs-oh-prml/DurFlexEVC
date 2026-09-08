@@ -4,7 +4,7 @@ g2p_en==2.1.0
 joblib==1.4.2
 librosa==0.10.2.post1
 matplotlib==3.10.0
-nltk==3.9.1
+nltk==3.10.3
 numpy==1.24.4
 packaging==24.2
 pandas==2.2.3
