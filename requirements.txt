@@ -21,6 +21,6 @@ TextGrid==1.6.1
 torch==2.5.1
 torchaudio==2.5.1
 tqdm==4.66.5
-transformers==4.46.0
+transformers==5.10.1
 webrtcvad==2.0.10
 pytorch_revgrad
