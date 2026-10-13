@@ -18,7 +18,7 @@ scipy==1.15.1
 six==1.16.0
 skimage==0.0
 TextGrid==1.6.1
-torch==2.5.1
+torch==2.13.0
 torchaudio==2.5.1
 tqdm==4.66.5
 transformers==5.10.1
